@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/users");
+        const response = await fetch(`${API_BASE_URL}/api/users`);
         const data = await response.json();
         setUsers(data);
       } catch (error) {
