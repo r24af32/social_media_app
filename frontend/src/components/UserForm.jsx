@@ -26,7 +26,7 @@ const UserForm = () => {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/users`, {
+      const response = await fetch(`${API_BASE_URL}api/users`, {
         method: "POST",
         body: data,
       });
