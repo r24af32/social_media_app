@@ -15,7 +15,7 @@ const UserForm = () => {
   const handleFileChange = (e) => {
     setImages(e.target.files);
   };
-  const API_BASE_URL = process.env.REACT_APP_API_URL;
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData();
@@ -26,7 +26,7 @@ const UserForm = () => {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}api/users`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}api/users`, {
         method: "POST",
         body: data,
       });
