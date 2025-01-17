@@ -6,8 +6,8 @@ const UserForm = () => {
     socialHandle: "",
   });
   const [images, setImages] = useState([]);
-  const [isLoading, setIsLoading] = useState(false); // Loading state
-  const fileInputRef = useRef(null); // Reference for the file input field
+  const [isLoading, setIsLoading] = useState(false);
+  const fileInputRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,7 +20,7 @@ const UserForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true); // Start loading
+    setIsLoading(true); 
 
     const data = new FormData();
     data.append("name", formData.name);
@@ -38,8 +38,8 @@ const UserForm = () => {
       if (response.ok) {
         alert("Submission successful!");
         setFormData({ name: "", socialHandle: "" });
-        setImages([]); // Clear images state
-        if (fileInputRef.current) fileInputRef.current.value = ""; // Reset file input
+        setImages([]);
+        if (fileInputRef.current) fileInputRef.current.value = ""; 
       } else {
         alert("Failed to submit. Please try again.");
       }

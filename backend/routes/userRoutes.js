@@ -6,29 +6,29 @@ const User = require("../models/User");
 
 const router = express.Router();
 
-// Configure Cloudinary
+//cloudinary config
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Cloudinary storage configuration
+//cloudinary storage
 const storage = new CloudinaryStorage({
   cloudinary,
   params: {
-    folder: "social_media_app", // Replace with the desired folder name in Cloudinary
-    allowed_formats: ["jpg", "png", "gif"], // Allowed file types
+    folder: "social_media_app", 
+    allowed_formats: ["jpg", "png", "gif"], 
   },
 });
 
-// Configure multer to use Cloudinary storage
+//multer to use cloudinary s
 const upload = multer({
   storage,
-  limits: { files: 20 }, // Max number of files
+  limits: { files: 20 }, 
 });
 
-// Route to handle form submissions
+//route to form submissions
 router.post("/", upload.array("images", 20), async (req, res) => {
   try {
     const { name, socialHandle } = req.body;
@@ -41,10 +41,9 @@ router.post("/", upload.array("images", 20), async (req, res) => {
       return res.status(400).json({ error: "At least one image is required" });
     }
 
-    // Extract image URLs
     const images = req.files.map((file) => file.path);
 
-    // Save user to database
+    //save user to database
     const user = new User({ name, socialHandle, images });
     await user.save();
 
@@ -56,7 +55,7 @@ router.post("/", upload.array("images", 20), async (req, res) => {
 });
 
 
-// Route to fetch all users
+//route to fetch users
 router.get("/", async (req, res) => {
   try {
     const users = await User.find();
