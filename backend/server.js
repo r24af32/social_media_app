@@ -7,25 +7,32 @@ const userRoutes = require("./routes/userRoutes");
 const app = express();
 
 // middleware
-app.use(cors({
-  origin: process.env.FRONTEND_URL || "https://socialmediapp-frontend.netlify.app",
-}));
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "https://socialmediapp-frontend.netlify.app",
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static("uploads"));
 
+// Root route to handle base URL
+app.get("/", (req, res) => {
+  res.send("Welcome to the Social Media App Backend!");
+});
+
 // MongoDB Connection
 mongoose
   .connect(process.env.MONGO_URI, {
-    dbName: 'social_media_app',
+    dbName: "social_media_app",
   })
-  .then(() => console.log('MongoDB connected successfully'))
-  .catch((err) => console.error('MongoDB connection error:', err));
+  .then(() => console.log("MongoDB connected successfully"))
+  .catch((err) => console.error("MongoDB connection error:", err));
 
-// routes
+// API routes
 app.use("/api/users", userRoutes);
 
-//server
+// server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
