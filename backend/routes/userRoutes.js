@@ -1,41 +1,47 @@
 const express = require("express");
 const multer = require("multer");
+const { v2: cloudinary } = require("cloudinary");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const User = require("../models/User");
 
 const router = express.Router();
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/");
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// Cloudinary storage configuration
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "social_media_app", // Replace with the desired folder name in Cloudinary
+    allowed_formats: ["jpg", "png", "gif"], // Allowed file types
   },
 });
 
-// for multiple image
+// Configure multer to use Cloudinary storage
 const upload = multer({
   storage,
-  limits: { files: 20 },
-  fileFilter: (req, file, cb) => {
-    const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
-    if (!allowedTypes.includes(file.mimetype)) {
-      return cb(new Error("Invalid file type. Only images are allowed."));
-    }
-    cb(null, true);
-  },
+  limits: { files: 20 }, // Max number of files
 });
 
-// route handle
+// Route to handle form submissions
 router.post("/", upload.array("images", 20), async (req, res) => {
   try {
     const { name, socialHandle } = req.body;
+
+    // Validate input
     if (!name || !socialHandle) {
       return res.status(400).json({ error: "Name and social handle are required" });
     }
 
-    const images = req.files.map((file) => `/uploads/${file.filename}`);
+    // Extract image URLs from uploaded files
+    const images = req.files.map((file) => file.path);
 
+    // Save user to database
     const user = new User({ name, socialHandle, images });
     await user.save();
 
@@ -46,7 +52,7 @@ router.post("/", upload.array("images", 20), async (req, res) => {
   }
 });
 
-// route to all sub
+// Route to fetch all users
 router.get("/", async (req, res) => {
   try {
     const users = await User.find();
