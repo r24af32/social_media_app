@@ -32,7 +32,7 @@ const AdminDashboard = () => {
               {user.images.map((image, idx) => (
                 <img
                   key={idx}
-                  src={`https://socialmediapp-backend.vercel.app${image}`}
+                  src={`${image}`}
                   alt="Uploaded"
                   style={styles.image}
                 />
