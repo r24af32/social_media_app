@@ -26,7 +26,7 @@ const UserForm = () => {
     }
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users`, {
+      const response = await fetch(`https://socialmediapp-backend.vercel.app/api/users`, {
         method: "POST",
         body: data,
       });

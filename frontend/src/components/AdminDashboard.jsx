@@ -7,7 +7,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users`);
+        const response = await fetch(`https://socialmediapp-backend.vercel.app/api/users`);
         const data = await response.json();
         setUsers(data);
       } catch (error) {
@@ -32,7 +32,7 @@ const AdminDashboard = () => {
               {user.images.map((image, idx) => (
                 <img
                   key={idx}
-                  src={`http://localhost:5000${image}`}
+                  src={`https://socialmediapp-backend.vercel.app${image}`}
                   alt="Uploaded"
                   style={styles.image}
                 />
