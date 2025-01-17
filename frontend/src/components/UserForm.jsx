@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 
 const UserForm = () => {
   const [formData, setFormData] = useState({
@@ -7,6 +7,7 @@ const UserForm = () => {
   });
   const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(false); // Loading state
+  const fileInputRef = useRef(null); // Reference for the file input field
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -37,7 +38,8 @@ const UserForm = () => {
       if (response.ok) {
         alert("Submission successful!");
         setFormData({ name: "", socialHandle: "" });
-        setImages([]);
+        setImages([]); // Clear images state
+        if (fileInputRef.current) fileInputRef.current.value = ""; // Reset file input
       } else {
         alert("Failed to submit. Please try again.");
       }
@@ -82,6 +84,7 @@ const UserForm = () => {
             name="images"
             multiple
             onChange={handleFileChange}
+            ref={fileInputRef} // Attach ref to file input
             style={styles.input}
           />
         </div>
