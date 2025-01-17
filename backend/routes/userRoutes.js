@@ -33,12 +33,15 @@ router.post("/", upload.array("images", 20), async (req, res) => {
   try {
     const { name, socialHandle } = req.body;
 
-    // Validate input
     if (!name || !socialHandle) {
       return res.status(400).json({ error: "Name and social handle are required" });
     }
 
-    // Extract image URLs from uploaded files
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ error: "At least one image is required" });
+    }
+
+    // Extract image URLs
     const images = req.files.map((file) => file.path);
 
     // Save user to database
@@ -51,6 +54,7 @@ router.post("/", upload.array("images", 20), async (req, res) => {
     res.status(500).json({ error: "Failed to save user submission" });
   }
 });
+
 
 // Route to fetch all users
 router.get("/", async (req, res) => {

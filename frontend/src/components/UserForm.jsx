@@ -6,6 +6,7 @@ const UserForm = () => {
     socialHandle: "",
   });
   const [images, setImages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false); // Loading state
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -15,9 +16,11 @@ const UserForm = () => {
   const handleFileChange = (e) => {
     setImages(e.target.files);
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true); // Start loading
+
     const data = new FormData();
     data.append("name", formData.name);
     data.append("socialHandle", formData.socialHandle);
@@ -41,6 +44,8 @@ const UserForm = () => {
     } catch (error) {
       console.error("Error:", error);
       alert("An error occurred. Please try again.");
+    } finally {
+      setIsLoading(false); // Stop loading
     }
   };
 
@@ -80,10 +85,23 @@ const UserForm = () => {
             style={styles.input}
           />
         </div>
-        <button type="submit" style={styles.submitButton}>
-          Submit
+        <button
+          type="submit"
+          style={{
+            ...styles.submitButton,
+            backgroundColor: isLoading ? "#ccc" : "#4caf50",
+            cursor: isLoading ? "not-allowed" : "pointer",
+          }}
+          disabled={isLoading} // Disable button during loading
+        >
+          {isLoading ? "Submitting..." : "Submit"} {/* Change button text */}
         </button>
       </form>
+      {isLoading && (
+        <div style={styles.loading}>
+          <span>Uploading, please wait...</span>
+        </div>
+      )}
     </div>
   );
 };
@@ -134,6 +152,12 @@ const styles = {
     borderRadius: "4px",
     cursor: "pointer",
     textAlign: "center",
+  },
+  loading: {
+    marginTop: "20px",
+    textAlign: "center",
+    color: "#666",
+    fontSize: "14px",
   },
 };
 
